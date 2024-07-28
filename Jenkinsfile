@@ -8,44 +8,38 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    def scmVars = checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                        userRemoteConfigs: [[url: 'https://github.com/Pratik-Pardeshi/Project-5-Devops.git',
-                        credentialsId: 'github-credentials']]])
-                }
+                checkout scm
             }
         }
-
         stage('Build') {
             steps {
                 script {
-                    def app = docker.build("pratikp02/my-webapp:${env.BUILD_ID}")
+                    docker.build("pratikp02/my-webapp:4")
                 }
             }
         }
-
         stage('Test') {
             steps {
                 sh 'echo Running Tests'
-                // Add your test commands here
             }
         }
-
         stage('Deploy') {
             steps {
                 script {
-                    docker.withRegistry('', 'dockerhub-credentials') {
-                        app.push()
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        docker.image('pratikp02/my-webapp:4').push()
                     }
                 }
-                sh 'docker run -d -p 80:80 pratikp02/my-webapp:${env.BUILD_ID}'
             }
         }
     }
-
     post {
         always {
             cleanWs()
+            echo 'Cleanup done!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
