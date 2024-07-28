@@ -8,7 +8,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Pratik-Pardeshi/Project-5-Devops.git'
+                script {
+                    def scmVars = checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+                        userRemoteConfigs: [[url: 'https://github.com/Pratik-Pardeshi/Project-5-Devops.git',
+                        credentialsId: 'github-credentials']]])
+                }
             }
         }
 
