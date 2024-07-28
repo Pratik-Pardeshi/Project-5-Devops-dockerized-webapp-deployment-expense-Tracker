@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
     }
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/Pratik-Pardeshi/Project-5-Devops-dockerized-webapp-deployment.git'
             }
         }
         stage('Build') {
@@ -18,22 +18,21 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'echo Running Tests'
+                script {
+                    docker.image('pratikp02/my-webapp:4').inside {
+                        sh 'make test'
+                    }
+                }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        docker.image('pratikp02/my-webapp:4').run('-d -p 80:80')
+                    docker.image('pratikp02/my-webapp:4').inside {
+                        sh 'make deploy'
                     }
                 }
             }
-        }
-    }
-    post {
-        always {
-            cleanWs()
         }
     }
 }
