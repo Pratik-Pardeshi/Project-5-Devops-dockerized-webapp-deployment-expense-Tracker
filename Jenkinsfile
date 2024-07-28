@@ -1,10 +1,8 @@
 pipeline {
     agent any
-
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build("pratikp02/my-webapp:4")
+                    docker.build('pratikp02/my-webapp:4')
                 }
             }
         }
@@ -27,7 +25,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        docker.image('pratikp02/my-webapp:4').push()
+                        docker.image('pratikp02/my-webapp:4').run('-d -p 80:80')
                     }
                 }
             }
@@ -36,10 +34,6 @@ pipeline {
     post {
         always {
             cleanWs()
-            echo 'Cleanup done!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
