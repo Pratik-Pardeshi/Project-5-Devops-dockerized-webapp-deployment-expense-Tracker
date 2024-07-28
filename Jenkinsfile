@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Pratik-Pardeshi/Project-5-Devops-dockerized-webapp-deployment.git/'
+                git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/Pratik-Pardeshi/Project-5-Devops-dockerized-webapp-deployment.git'
             }
         }
 
