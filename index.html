@@ -3,23 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> WebApp Project 5</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>Web Application with Docker and Jenkins</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #1e3c72, #2a5298, #1e3c72);
+            background-size: 600% 600%;
+            animation: gradientBackground 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            animation: fadeIn 2s ease-in-out;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(5.5px);
+            -webkit-backdrop-filter: blur(5.5px);
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 0.5em;
+            animation: colorChange 5s infinite;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff4e50; }
+            50% { color: #f9d423; }
+            100% { color: #ff4e50; }
+        }
+
+        .button {
+            background-color: #ff4e50;
+            border: none;
+            padding: 1em 2em;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: bounce 2s infinite;
+            transition: background-color 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .button:hover {
+            background-color: #f9d423;
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            animation: float 6s infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .ripple {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            animation: ripple 1s linear infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 1em;
+            backdrop-filter: blur(5.5px);
+            -webkit-backdrop-filter: blur(5.5px);
+        }
+
+        footer a {
+            color: #f9d423;
+            text-decoration: none;
+            margin: 0 0.5em;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My DevOps Project 5...!</h1>
-    </header>
-    <main>
-        <section class="hero">
-            <h2>Simple WebApp Project</h2>
-            <p>Technologies Used: Jenkins, Docker, Html, CSS, JS.</p>
-            <button>Click Here ...</button>
-        </section>
-    </main>
+    <div class="container">
+        <h1>Deploy with Docker and Jenkins</h1>
+        <p>Continuous Integration and Continuous Deployment made easy.</p>
+        <button class="button" onclick="showAlert(event)">Get Started</button>
+    </div>
     <footer>
-        <p>&copy; 2024 Pratik Pardeshi. All rights reserved.</p>
+        &copy; 2024 Pratik Pardeshi. All Rights Reserved. | 
+        <a href="https://github.com/Pratik-Pardeshi" target="_blank">About Me</a> | 
+        <a href="https://github.com/Pratik-Pardeshi?tab=repositories" target="_blank">My Projects</a> | 
+        <a href="https://www.linkedin.com/in/pratik-pardeshi-424288272/?originalSubdomain=in" target="_blank">Linkedin</a>
     </footer>
+    <script>
+        function showAlert(event) {
+            alert('Welcome to Docker and Jenkins Integration!');
+
+            // Ripple effect
+            const button = event.currentTarget;
+            const circle = document.createElement('div');
+            circle.classList.add('ripple');
+            button.appendChild(circle);
+
+            const d = Math.max(button.clientWidth, button.clientHeight);
+            circle.style.width = circle.style.height = `${d}px`;
+            const rect = button.getBoundingClientRect();
+            circle.style.left = `${event.clientX - rect.left - d / 2}px`;
+            circle.style.top = `${event.clientY - rect.top - d / 2}px`;
+
+            circle.addEventListener('animationend', () => {
+                circle.remove();
+            });
+        }
+
+        function createFloatingCircles() {
+            for (let i = 0; i < 10; i++) {
+                let circle = document.createElement('div');
+                circle.className = 'circle';
+                document.body.appendChild(circle);
+                circle.style.width = circle.style.height = `${Math.random() * 100 + 50}px`;
+                circle.style.top = `${Math.random() * 100}vh`;
+                circle.style.left = `${Math.random() * 100}vw`;
+                circle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            }
+        }
+
+        window.onload = createFloatingCircles;
+    </script>
 </body>
 </html>
