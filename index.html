@@ -3,208 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Application with Docker and Jenkins</title>
+    <title> ChatGPT Interface</title>
     <style>
         body {
-            margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, #1e3c72, #2a5298, #1e3c72);
-            background-size: 600% 600%;
-            animation: gradientBackground 15s ease infinite;
+            margin: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #2b2d42, #8d99ae);
+            color: #f8f8f2;
             overflow: hidden;
         }
-
-        @keyframes gradientBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container {
-            text-align: center;
-            color: white;
-            animation: fadeIn 2s ease-in-out;
+        .header {
+            background: #1f2937;
+            color: #e2e8f0;
             padding: 20px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(5.5px);
-            -webkit-backdrop-filter: blur(5.5px);
-            z-index: 2;
-        }
-
-        h1 {
-            font-size: 4em;
-            margin-bottom: 0.5em;
-            animation: colorChange 5s infinite;
-        }
-
-        p {
-            font-size: 1.5em;
-            margin-bottom: 1em;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes colorChange {
-            0% { color: #ff4e50; }
-            50% { color: #f9d423; }
-            100% { color: #ff4e50; }
-        }
-
-        .button {
-            background-color: #ff4e50;
-            border: none;
-            padding: 1em 2em;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-            animation: bounce 2s infinite;
-            transition: background-color 0.3s;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             position: relative;
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-30px);
-            }
-            60% {
-                transform: translateY(-15px);
-            }
-        }
-
-        .button:hover {
-            background-color: #f9d423;
-        }
-
-        .button:active {
-            transform: scale(0.95);
-        }
-
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            animation: float 6s infinite;
             z-index: 1;
         }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        .ripple {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            position: absolute;
-            animation: ripple 1s linear infinite;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+        .footer {
+            background: #1f2937;
+            color: #e2e8f0;
+            padding: 10px;
             text-align: center;
-            padding: 1em 0;
-            font-size: 1em;
-            backdrop-filter: blur(5.5px);
-            -webkit-backdrop-filter: blur(5.5px);
+            font-size: 12px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid #374151;
         }
-
-        footer a {
-            color: #f9d423;
-            text-decoration: none;
-            margin: 0 0.5em;
+        .chat-container {
+            flex: 1;
+            max-width: 900px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
         }
-
-        footer a:hover {
-            text-decoration: underline;
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            opacity: 0;
+            animation: fadeIn 0.6s forwards;
+            animation-delay: calc(var(--i) * 0.3s);
+        }
+        .chat-message.user-message {
+            justify-content: flex-end;
+        }
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 75%;
+            line-height: 1.4;
+            position: relative;
+            transition: background 0.3s, transform 0.3s;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .user-message .message-content {
+            background: #34b7f1;
+            color: #ffffff;
+            border-radius: 18px 18px 0 18px;
+            animation: slideInRight 0.6s ease-out;
+        }
+        .bot-message .message-content {
+            background: #e5e5ea;
+            color: #333333;
+            border-radius: 18px 18px 18px 0;
+            animation: slideInLeft 0.6s ease-out;
+        }
+        .chat-message:hover .message-content {
+            transform: scale(1.03);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e5ea;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+            transition: box-shadow 0.3s;
+        }
+        .chat-input input:focus {
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        }
+        .chat-input button {
+            padding: 12px 18px;
+            border: none;
+            background: #34b7f1;
+            color: #ffffff;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            outline: none;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .chat-input button:hover {
+            background: #28a4d9;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Deploy with Docker and Jenkins</h1>
-        <p>Continuous Integration and Continuous Deployment made easy.</p>
-        <button class="button" onclick="showAlert(event)">Get Started</button>
+    <div class="header">
+         ChatGPT Interface
     </div>
-    <footer>
-        &copy; 2024 Pratik Pardeshi. All Rights Reserved. | 
-        <a href="https://github.com/Pratik-Pardeshi" target="_blank">About Me</a> | 
-        <a href="https://github.com/Pratik-Pardeshi?tab=repositories" target="_blank">My Projects</a> | 
-        <a href="https://www.linkedin.com/in/pratik-pardeshi-424288272/?originalSubdomain=in" target="_blank">Linkedin</a>
-    </footer>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 Pratik Pardeshi. All rights reserved.
+    </div>
+
     <script>
-        function showAlert(event) {
-            alert('Welcome to Docker and Jenkins Integration!');
+        function sendMessage() {
+            var inputField = document.getElementById('user-input');
+            var chatBox = document.getElementById('chat-box');
+            var messageText = inputField.value.trim();
 
-            // Ripple effect
-            const button = event.currentTarget;
-            const circle = document.createElement('div');
-            circle.classList.add('ripple');
-            button.appendChild(circle);
+            if (messageText === '') return;
 
-            const d = Math.max(button.clientWidth, button.clientHeight);
-            circle.style.width = circle.style.height = `${d}px`;
-            const rect = button.getBoundingClientRect();
-            circle.style.left = `${event.clientX - rect.left - d / 2}px`;
-            circle.style.top = `${event.clientY - rect.top - d / 2}px`;
+            // Append user message
+            var userMessage = document.createElement('div');
+            userMessage.className = 'chat-message user-message';
+            userMessage.style.setProperty('--i', chatBox.children.length);
+            userMessage.innerHTML = '<div class="message-content">' + messageText + '</div>';
+            chatBox.appendChild(userMessage);
 
-            circle.addEventListener('animationend', () => {
-                circle.remove();
+            // Clear input field
+            inputField.value = '';
+
+            // Animate user message
+            setTimeout(() => { userMessage.style.opacity = '1'; }, 100);
+
+            // Simulate bot response
+            simulateBotResponse(messageText).then(botResponse => {
+                var botMessage = document.createElement('div');
+                botMessage.className = 'chat-message bot-message';
+                botMessage.style.setProperty('--i', chatBox.children.length);
+                botMessage.innerHTML = '<div class="message-content">' + botResponse + '</div>';
+                chatBox.appendChild(botMessage);
+
+                // Animate bot message
+                setTimeout(() => { botMessage.style.opacity = '1'; }, 100);
+                chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
             });
         }
 
-        function createFloatingCircles() {
-            for (let i = 0; i < 10; i++) {
-                let circle = document.createElement('div');
-                circle.className = 'circle';
-                document.body.appendChild(circle);
-                circle.style.width = circle.style.height = `${Math.random() * 100 + 50}px`;
-                circle.style.top = `${Math.random() * 100}vh`;
-                circle.style.left = `${Math.random() * 100}vw`;
-                circle.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        // Handle Enter key press for sending messages
+        document.getElementById('user-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
             }
-        }
+        });
 
-        window.onload = createFloatingCircles;
+        // Add a function to simulate bot responses
+        function simulateBotResponse(userMessage) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve('You said: ' + userMessage);
+                }, 700);
+            });
+        }
     </script>
 </body>
 </html>
