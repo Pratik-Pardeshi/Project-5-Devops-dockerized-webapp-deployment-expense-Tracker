@@ -3,212 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> ChatGPT Interface</title>
+    <title>Devops-5 Expense Tracker</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #2b2d42, #8d99ae);
-            color: #f8f8f2;
             overflow: hidden;
+            animation: backgroundAnimation 20s ease infinite;
         }
-        .header {
-            background: #1f2937;
-            color: #e2e8f0;
-            padding: 20px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
+
+        @keyframes backgroundAnimation {
+            0% { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+            50% { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+            100% { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
         }
-        .footer {
-            background: #1f2937;
-            color: #e2e8f0;
-            padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-            border-top: 1px solid #374151;
-        }
-        .chat-container {
-            flex: 1;
-            max-width: 900px;
-            margin: 20px auto;
-            background: #ffffff;
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 480px;
+            max-height: 80vh;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-        .chat-box {
-            flex: 1;
-            padding: 20px;
+            gap: 20px;
             overflow-y: auto;
-            background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
             position: relative;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
         }
-        .chat-message {
-            margin-bottom: 15px;
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .expense-form, .filter-form {
             display: flex;
-            align-items: flex-start;
-            opacity: 0;
-            animation: fadeIn 0.6s forwards;
-            animation-delay: calc(var(--i) * 0.3s);
+            flex-direction: column;
+            gap: 15px;
         }
-        .chat-message.user-message {
-            justify-content: flex-end;
-        }
-        .message-content {
-            padding: 12px 18px;
-            border-radius: 18px;
-            max-width: 75%;
-            line-height: 1.4;
-            position: relative;
-            transition: background 0.3s, transform 0.3s;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        .user-message .message-content {
-            background: #34b7f1;
-            color: #ffffff;
-            border-radius: 18px 18px 0 18px;
-            animation: slideInRight 0.6s ease-out;
-        }
-        .bot-message .message-content {
-            background: #e5e5ea;
-            color: #333333;
-            border-radius: 18px 18px 18px 0;
-            animation: slideInLeft 0.6s ease-out;
-        }
-        .chat-message:hover .message-content {
-            transform: scale(1.03);
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideInLeft {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .chat-input {
-            display: flex;
-            padding: 15px;
-            background: #ffffff;
-            border-top: 1px solid #e5e5ea;
-            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-        }
-        .chat-input input {
-            flex: 1;
+
+        input, button, select {
             padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 20px;
-            outline: none;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
             font-size: 16px;
-            transition: box-shadow 0.3s;
         }
-        .chat-input input:focus {
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+
+        input:focus, select:focus, button:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
         }
-        .chat-input button {
-            padding: 12px 18px;
+
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 24px);
+        }
+
+        button {
+            background: #007bff;
+            color: white;
             border: none;
-            background: #34b7f1;
-            color: #ffffff;
-            border-radius: 20px;
-            margin-left: 10px;
             cursor: pointer;
-            outline: none;
             font-size: 16px;
-            transition: background 0.3s, transform 0.3s;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
-        .chat-input button:hover {
-            background: #28a4d9;
+
+        button:hover {
+            background: #0056b3;
             transform: scale(1.05);
+        }
+
+        .expense-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .expense-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .expense-item:hover {
+            background-color: #e9ecef;
+            transform: scale(1.02);
+        }
+
+        .expense-item button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .expense-item button:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: center;
+            font-size: 20px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .filter-form select, .filter-form input {
+            width: auto;
+        }
+
+        footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #333;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+    border-radius: 12px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    backdrop-filter: blur(8px); /* Optional: add blur effect to enhance transparency */
+}
+
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-         ChatGPT Interface
-    </div>
-    <div class="chat-container">
-        <div class="chat-box" id="chat-box">
-            <!-- Messages will appear here -->
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <div class="expense-form">
+            <input type="text" id="expenseName" placeholder="Expense Name">
+            <input type="number" id="expenseAmount" placeholder="Amount (₹)" min="0" step="0.01">
+            <button onclick="addExpense()">Add Expense</button>
         </div>
-        <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
+        <div class="filter-form">
+            <input type="text" id="searchInput" placeholder="Search by name" oninput="filterExpenses()">
+            <label for="amountFilter">Filter by amount:</label>
+            <select id="amountFilter" onchange="filterExpenses()">
+                <option value="">All</option>
+                <option value="greater">Greater than</option>
+                <option value="less">Less than</option>
+            </select>
+            <input type="number" id="amountValue" placeholder="Amount (₹)" min="0" step="0.01" oninput="filterExpenses()">
         </div>
+        <ul id="expenseList" class="expense-list"></ul>
+        <div class="total">Total: ₹<span id="totalAmount">0.00</span></div>
     </div>
-    <div class="footer">
-        © 2024 Pratik Pardeshi. All rights reserved.
-    </div>
+    <footer>
+        <p>Designed by <a href="https://www.linkedin.com/in/pratikpardeshi" target="_blank">Pratik Pardeshi</a></p>
+    </footer>
 
     <script>
-        function sendMessage() {
-            var inputField = document.getElementById('user-input');
-            var chatBox = document.getElementById('chat-box');
-            var messageText = inputField.value.trim();
+        let totalAmount = 0;
+        const expenses = [];
 
-            if (messageText === '') return;
+        function addExpense() {
+            const name = document.getElementById('expenseName').value.trim();
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
 
-            // Append user message
-            var userMessage = document.createElement('div');
-            userMessage.className = 'chat-message user-message';
-            userMessage.style.setProperty('--i', chatBox.children.length);
-            userMessage.innerHTML = '<div class="message-content">' + messageText + '</div>';
-            chatBox.appendChild(userMessage);
+            if (name && !isNaN(amount) && amount > 0) {
+                const expenseList = document.getElementById('expenseList');
+                const li = document.createElement('li');
+                li.className = 'expense-item';
+                li.innerHTML = `
+                    ${name} - ₹${amount.toFixed(2)}
+                    <button onclick="removeExpense(this, ${amount})">Delete</button>
+                `;
+                expenseList.appendChild(li);
 
-            // Clear input field
-            inputField.value = '';
+                // Save the expense
+                expenses.push({ name, amount });
 
-            // Animate user message
-            setTimeout(() => { userMessage.style.opacity = '1'; }, 100);
+                // Update total amount
+                totalAmount += amount;
+                document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
 
-            // Simulate bot response
-            simulateBotResponse(messageText).then(botResponse => {
-                var botMessage = document.createElement('div');
-                botMessage.className = 'chat-message bot-message';
-                botMessage.style.setProperty('--i', chatBox.children.length);
-                botMessage.innerHTML = '<div class="message-content">' + botResponse + '</div>';
-                chatBox.appendChild(botMessage);
-
-                // Animate bot message
-                setTimeout(() => { botMessage.style.opacity = '1'; }, 100);
-                chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
-            });
+                // Clear input fields
+                document.getElementById('expenseName').value = '';
+                document.getElementById('expenseAmount').value = '';
+            } else {
+                alert('Please enter a valid name and amount.');
+            }
         }
 
-        // Handle Enter key press for sending messages
-        document.getElementById('user-input').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                sendMessage();
-            }
-        });
+        function removeExpense(button, amount) {
+            const expenseList = document.getElementById('expenseList');
+            expenseList.removeChild(button.parentElement);
 
-        // Add a function to simulate bot responses
-        function simulateBotResponse(userMessage) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('You said: ' + userMessage);
-                }, 700);
+            // Remove the expense from the array
+            const name = button.parentElement.textContent.split(' - ')[0];
+            const index = expenses.findIndex(exp => exp.name === name && exp.amount === amount);
+            if (index > -1) {
+                expenses.splice(index, 1);
+            }
+
+            // Update total amount
+            totalAmount -= amount;
+            document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+        }
+
+        function filterExpenses() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const amountFilter = document.getElementById('amountFilter').value;
+            const amountValue = parseFloat(document.getElementById('amountValue').value);
+            const expenseList = document.getElementById('expenseList');
+
+            // Clear the list before filtering
+            expenseList.innerHTML = '';
+
+            // Filter expenses based on the criteria
+            const filteredExpenses = expenses.filter(exp => {
+                const matchesSearch = exp.name.toLowerCase().includes(searchInput);
+                const matchesAmount = (amountFilter === '' || 
+                    (amountFilter === 'greater' && exp.amount > amountValue) || 
+                    (amountFilter === 'less' && exp.amount < amountValue));
+                return matchesSearch && matchesAmount;
             });
+
+            // Render filtered expenses
+            filteredExpenses.forEach(exp => {
+                const li = document.createElement('li');
+                li.className = 'expense-item';
+                li.innerHTML = `
+                    ${exp.name} - ₹${exp.amount.toFixed(2)}
+                    <button onclick="removeExpense(this, ${exp.amount})">Delete</button>
+                `;
+                expenseList.appendChild(li);
+            });
+
+            // Update total amount based on filtered expenses
+            const total = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
         }
     </script>
 </body>
